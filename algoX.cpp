@@ -325,17 +325,6 @@ void Sudoku::algorithmX(void) {
     return;
 }
 
-void Sudoku::recordHintSol() {
-    if (STATE == THREE) {
-        addHints.push_back(add_hints[0]);
-        addHints.push_back(add_hints[1]);
-        addHints.push_back(add_hints[2]);
-        ConvergeCount17 = Count;
-    } else if (STATE == ONE) {
-        CandidateHints[add_hints[0]] = Count;
-    }
-}
-
 int Sudoku::callAlgorithmX(int state) {
     Count = 0;
     if (STATE == MINUS)
@@ -349,12 +338,14 @@ int Sudoku::callAlgorithmX(int state) {
         min_sol = Count;
         if (STATE == THREE) {
             printf("solution : %d -> %d\n", min_sol, Count);
+            addHints.clear();
             addHints.push_back(add_hints[0]);
             addHints.push_back(add_hints[1]);
             addHints.push_back(add_hints[2]);
             ConvergeCount17 = Count;
         } else if (STATE == ONE) {
             CandidateHints[add_hints[0]] = Count;
+            addHints.clear();
             addHints.push_back(add_hints[0]);
         }
     }

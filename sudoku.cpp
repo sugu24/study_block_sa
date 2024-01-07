@@ -5,13 +5,12 @@ std::vector<Sudoku> sudokus;
 
 int BEAM;
 int MAX_PARENT;
-int Converge14 = 1700000;
                 //  1~2  2~3  3~4  4~5  5~6  6~7  7~8  8~9  9~10 10~11 11~12 12~13  13~14
 int SaCount[13] = { 300, 300, 300, 300, 300, 300, 300, 300, 500, 700, 700, 700, 1000 };
 int BTs = 50;
 int startBT = 13;
 // int UnderConverve14 = 160000;
-int UnderConverve14 = 1700000;
+int UnderConverve14 = 1000000;
 int max_14_size = 8;
 
 bool add_three_hints;
@@ -173,7 +172,7 @@ void setSudoku(int beam) {
 void hint14thsResize(int beam, std::vector<std::tuple<int, int, int>> *hint14ths) {
     int under_conv_count = 0;
     for (; under_conv_count < max_14_size; under_conv_count++)
-        if (std::get<0>(hint14ths->at(under_conv_count)) > UnderConverve14) break;
+        if (std::get<0>(hint14ths->at(under_conv_count)) >= UnderConverve14) break;
     hint14ths->resize(beam);
 }
 
@@ -215,6 +214,8 @@ void createSudoku14(int beam) {
         //Sudoku sudoku = Sudoku(sudokus[id], hint);
         sudokus[id].addHint(hint / 81, (hint / 9) % 9, hint % 9);
         time_over |= sudokus[id].AlgorithmX(ZERO) == -1;
+        if (sudokus[id].getCount() == 1000000)
+            continue;
         hint14ths.push_back(std::make_tuple(sudokus[id].getCount(), id, hint));
         // f << " { " << conv << " " << sudokus[id].getCount() << " }";
         sudokus[id].deleteHint(hint / 81, (hint / 9) % 9, hint % 9);
@@ -288,21 +289,21 @@ void createSudoku17(int beam) {
         if (sudokus[id].getConvergeCount17() == 1)
             break;
     }
-
+    std::cout << 1 << std::endl;
     // hint 15 16 17 を記録
     for (int id = 0; id < sudokus.size(); id++) {
-        if (sudokus[id].getConvergeCount17() == 100000000) continue;
+        if (sudokus[id].getConvergeCount17() >= 1000000) continue;
         auto hints = sudokus[id].getAddHints();
         // f << "15 16 17 hints" << hints.at(0) << " " << hints.at(1) << " " << hints.at(2) << std::endl;
         hint_15th_16th_17ths.push_back(std::make_tuple(sudokus[id].getConvergeCount17(), id, hints.at(0), hints.at(1), hints.at(2)));
+        std::cout << id << " " << sudokus[id].getConvergeCount17() << " " << hints.at(0) << " " << hints.at(1) << " " << hints.at(2) << std::endl;
     }
-    
     // f.close();
 
     // 上位beam個を抽出
     sort(hint_15th_16th_17ths.begin(), hint_15th_16th_17ths.end());
     if (hint_15th_16th_17ths.size() > beam) hint_15th_16th_17ths.resize(beam);
-
+    std::cout << 3 << std::endl;
     // f.open(file_name, std::ios::app);
     // for (auto hints : hint_15th_16th_17ths)
     //     f << std::get<0>(hints) << " " << std::get<1>(hints) << " " << std::get<2>(hints) << " " << std::get<3>(hints) << " " << std::get<4>(hints) << std::endl;
@@ -314,9 +315,14 @@ void createSudoku17(int beam) {
         setConvIdHint15Hint16Hint17(&conv, &id, &hint15, &hint16, &hint17, hint_15th_16th_17th);
         sudokus.push_back(Sudoku(sudokus[id], id, conv, hint15, hint16, hint17));
     }
+    std::cout << 4 << std::endl;
     for (int i = 0; i < remove; i++) sudokus.erase(sudokus.begin());
-
+    std::cout << 5 << std::endl;
     printSudoku();
+
+    for (auto sudoku : sudokus) {
+        std::cout << "is answer ?:" << sudoku.AlgorithmX(MINUS) << std::endl;
+    }
 }
 
 Sudoku createSudoku(int beam) {
@@ -339,10 +345,10 @@ Sudoku createSudoku(int beam) {
     }
 }
 
-bool underAnswer() {
-    if (sudokus[sudokus.size()-1].getConvergeCount14() < UnderConverve14) return true;
-    else return false;
-}
+// bool underAnswer() {
+//     if (sudokus[sudokus.size()-1].getConvergeCount14() < UnderConverve14) return true;
+//     else return false;
+// }
 
 // arg : thisfile, out_file, beam, max_parent
 int main(int argc, char *argv[]) {

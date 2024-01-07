@@ -6,6 +6,7 @@ N = 20
 max_N = 5000
 
 # start thread
+exe = []
 for w in range(1, 11):
     exe.append((w, w, 0))
     exe.append((w, w, 1))
@@ -33,7 +34,7 @@ def runThread(i):
         # if max_N % 2:
         #     sudoku_thread = subprocess.Popen(['../cpp/study11/sudoku', '4', '2'])
         #sudoku_thread = subprocess.Popen(['../cpp/study12/sudoku', '{}'.format(beam), '{}'.format(max_parent)])
-        sudoku_thread = subprocess.Popen(['./sudoku.exe', '{}'.format(beam), '{}'.format(max_parent), '{}'.format(three), '&'])
+        sudoku_thread = subprocess.Popen(['./sudoku.exe', '{}'.format(beam), '{}'.format(max_parent), '{}'.format(three)])
         max_N -= 1
         return sudoku_thread
     else:
