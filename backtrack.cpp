@@ -153,9 +153,7 @@ void Sudoku::doBacktrack15_17() {
             addCandidateNumbers(mass1 / 9, mass1 % 9, num1);
         }
     }
-    addHints.push_back(hint15);
-    addHints.push_back(hint16);
-    addHints.push_back(hint17);
+    Hint15To17 = std::make_tuple(hint15, hint16, hint17);
     ConvergeCount17 = least_conv;
     
     /*

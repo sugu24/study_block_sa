@@ -5,8 +5,6 @@
 #include <vector>
 #include <iostream>
 
-time_t START_, END_;
-
 /* 
     algorithm X で数独を解く
 */
@@ -46,7 +44,7 @@ const int MAX_CONDITION_NODE = 324;
 const int MAX_HINT_NODE = 729;
 const int MAX_NODES_IN_CONDITION = 9;
 int number_of_solutions = 0;
-int min_sol;
+int min_sol = 100;
 int R;
 int STATE;
 int algoX_mass[9][9];
@@ -299,7 +297,7 @@ void Sudoku::selectAllConditionHint(struct ConditionNode *condition_node) {
     int nodes_in_condition;
     
     while (node = node->bottom) {
-        if (R <= Count) return;
+        if (R <= number_of_solutions) return;
         selectHint(0, node->hint_node);
     }
     
@@ -307,13 +305,10 @@ void Sudoku::selectAllConditionHint(struct ConditionNode *condition_node) {
 }
 
 void Sudoku::algorithmX(void) {
-    if (R <= Count) return;
-    END_ = time(NULL);
-    if (END_ - START_ > 60 * 50)
-        return;
+    if (R <= number_of_solutions) return;
 
     if (isAnswer()) {
-        Count++;
+        number_of_solutions++;
     } else {
         struct ConditionNode *condition_node;
         if (condition_node = getMinCondition()) {
@@ -325,45 +320,48 @@ void Sudoku::algorithmX(void) {
     return;
 }
 
+void Sudoku::recordHintSol() {
+    if (STATE == THREE) {
+        Hint15To17 = std::make_tuple(add_hints[0], add_hints[0], add_hints[0]);
+        ConvergeCount17 = number_of_solutions;
+    } else if (STATE == ONE) {
+        CandidateHints[add_hints[0]] = number_of_solutions;
+    }
+}
+
 int Sudoku::callAlgorithmX(int state) {
-    Count = 0;
-    if (STATE == MINUS)
-        R = min_sol;
+    number_of_solutions = 0;
+    if (STATE == ZERO)
+        R = state * 1700000 + !state;
     else
         R = state * min_sol + !state;
     
     algorithmX();
-    if (state && Count && min_sol > Count) {
-        printf("sol : %d -> %d\n", min_sol, Count);
-        min_sol = Count;
+    if (STATE == ZERO)
+        Count = number_of_solutions;
+    else if (state && number_of_solutions && min_sol > number_of_solutions) {
+        printf("sol : %d -> %d\n", min_sol, number_of_solutions);
+        min_sol = number_of_solutions;
         if (STATE == THREE) {
-            printf("solution : %d -> %d\n", min_sol, Count);
-            addHints.clear();
-            addHints.push_back(add_hints[0]);
-            addHints.push_back(add_hints[1]);
-            addHints.push_back(add_hints[2]);
-            ConvergeCount17 = Count;
-        } else if (STATE == ONE) {
-            CandidateHints[add_hints[0]] = Count;
-            addHints.clear();
-            addHints.push_back(add_hints[0]);
+            printf("solution : %d -> %d\n", min_sol, number_of_solutions);
+            Hint15To17 = std::make_tuple(add_hints[0], add_hints[1], add_hints[2]);
+            ConvergeCount17 = number_of_solutions;
         }
     }
     
-    return Count;
+    return number_of_solutions;
 }
 
 // 仮のヒントを添加してadd_hint_num個添加したらalgorithmXを行い解の個数を調べる
 // arg: add_hint_num: 添加する個数, hint_node: 先ほど添加したHintNode
 void Sudoku::addTempNHints(int add_hint_num, struct HintNode *hint_node) {
-    if (add_hint_num > 0) {
+    if (add_hint_num) {
         // 解があるなら続行
         if (!callAlgorithmX(0)) return;
         
         while (hint_node = hint_node->next) {
             if (!isCandidateHint(hint_node)) continue;
-            if (add_hint_num == THREE) 
-                printf("add_hint_num 3 %d\n", hint_node->hint);
+            if (add_hint_num == 3) printf("add_hint_num 3 %d\n", hint_node->hint);
             add_hints[add_hint_num-1] = hint_node->hint;
             selectHint(add_hint_num, hint_node);
             add_hints[add_hint_num-1] = -1;
@@ -385,19 +383,12 @@ int setNum = 14;
     THREE
 } BACKTRACKRECORD;
 */
-int Sudoku::AlgorithmX(int add_temp_hint) {
-    START_ = time(NULL);
+void Sudoku::AlgorithmX(int add_temp_hint) {
     STATE = add_temp_hint;
-    if (add_temp_hint == THREE)
-        min_sol = 1000;
-    else if (add_temp_hint == ZERO)
-        min_sol = 1000000;
-    else if (add_temp_hint == MINUS) 
-        min_sol = 2;
-    else if (add_temp_hint == ONE)
-        min_sol = 1000000;
-    
-    printf("%d %d %d %d %d\n", add_temp_hint, THREE, ZERO, MINUS, ONE);
+    if (add_temp_hint == ONE)
+        min_sol = 1;
+    else min_sol = 1000;
+
     // Dancing Linkの初期化
     algorithnX_init();
 
@@ -411,10 +402,6 @@ int Sudoku::AlgorithmX(int add_temp_hint) {
         exit(1);
     } else
         printf("freeDancingLink() success\n");
-    
-    if (END_ - START_ > 60 * 50)
-        return -1;
-    return Count;
 }
 /*
 int main() {

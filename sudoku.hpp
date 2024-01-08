@@ -15,7 +15,6 @@ extern int SaCount[13];
 extern int BTs;
 
 typedef enum BACKTRACKRECORD {
-    MINUS = -1,
     ZERO,
     ONE,
     TWO,
@@ -34,7 +33,7 @@ class Sudoku {
         std::vector<std::tuple<int, int>> changePair;
         
         std::map<int, int> CandidateHints;
-        std::vector<int> addHints;
+        std::tuple<int, int, int> Hint15To17;
         std::map<std::tuple<int, int, int>, int> threeHints;
         std::map<int, int> Hints;
 
@@ -125,7 +124,7 @@ class Sudoku {
         int getCount() { return Count; }
         std::map<int, int> getHints() { return Hints; }
         std::map<int, int> getCandidateHints() { return CandidateHints; }
-        std::vector<int> getAddHints() { return addHints; }
+        std::tuple<int, int, int> getHint15To17() { return Hint15To17; }
         void setConvergeCount14(int convergeCount14) { ConvergeCount14 = convergeCount14; }
         void setIndex(int ind) { Ind = ind; }
         std::string getBfrId() { return bfrId; }
@@ -150,5 +149,5 @@ class Sudoku {
         void deleteHint(int row, int col, int num);
 
         // ---------- Algorithm X ---------- //
-        int AlgorithmX(int add_temp_hint);
+        void AlgorithmX(int add_temp_hint);
 };
