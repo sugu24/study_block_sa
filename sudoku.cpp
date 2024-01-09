@@ -9,7 +9,7 @@ int Converge14 = 1700000;
 int SaCount[13] = { 300, 300, 300, 300, 300, 300, 300, 300, 500, 700, 700, 700, 1000 };
 int BTs = 50;
 int startBT = 13;
-// int UnderConverve14 = 160000;
+// int UnderConverve14 = 170000;
 int UnderConverve14 = 1700000;
 int max_14_size = 8;
 
