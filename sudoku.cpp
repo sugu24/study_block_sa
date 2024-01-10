@@ -334,7 +334,7 @@ int main(int argc, char *argv[]) {
     std::fstream f;
     file_name = "result_algoX.txt";
     f.open(file_name, std::ios::app);
-    f << BEAM << " " << MAX_PARENT << " " << use_ax << " " << sudoku.getHints().size() << " " << sudoku.getConvergeCount14() << " " << END - START << " " << times << "hint ->";
+    f << BEAM << " " << MAX_PARENT << " " << 1 << " " << sudoku.getHints().size() << " " << sudoku.getConvergeCount14() << " " << END - START << " " << times << "hint ->";
     // 4 4 1 18 502188 1900 270 389 289 370 hint -> ( 0 1 0 ) ( 0 3 4 ) ( 0 7 8 ) ( 1 0 2 ) ( 1 4 6 ) ( 1 5 7 ) ( 2 0 5 ) ( 2 7 1 ) ( 3 1 4 ) ( 3 2 8 ) ( 3 3 1 ) ( 4 6 5 ) ( 5 2 7 ) ( 6 0 6 ) ( 6 4 5 ) ( 6 6 2 ) ( 7 7 4 ) ( 8 5 8 )
     for (auto hint : sudoku.getHints())
         f << " ( " << hint.first / 9 << " " << hint.first % 9 << " " << hint.second << " )";
