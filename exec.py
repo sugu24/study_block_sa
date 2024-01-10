@@ -2,12 +2,12 @@ import subprocess
 import time
 
 # thread number and total thread number
-N = 20
+N = 25
 max_N = 5000
 
 # start thread
 exe = []
-for w in range(1, 11):
+for w in range(2, 11):
     exe.append(("./sudoku_one.exe", w, w))
     exe.append(("./sudoku.exe", w, w))
     exe.append(("./sudoku_one.exe", w, 2))
