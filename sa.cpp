@@ -241,7 +241,6 @@ int Sudoku::doingSATimes(int count) {
     saInitPat();
 
     for (int i = 0; i < count; i++) {
-        std::cout << i << std::endl;
         memcpy(pat, start_pat, sizeof(int)*81);
         converge_count += refine();
     }
