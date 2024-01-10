@@ -2,7 +2,7 @@ import subprocess
 import time
 
 # thread number and total thread number
-N = 25
+N = 15
 max_N = 5000
 
 # start thread

@@ -94,7 +94,6 @@ inline void Sudoku::keepRecord() {
 
 // 交換可能な2マスの選択
 inline std::tuple<int, int> Sudoku::massChoice() {
-    std::random_device rand;
     int r = rand() % changePair.size();
     return changePair.at(r);
 }
@@ -184,7 +183,10 @@ inline int delta_value(int row1, int col1, int row2, int col2) {
 }
 
 int Sudoku::refine() {
-    std::random_device rand;
+    struct timeval time;
+    gettimeofday(&time, nullptr);
+    unsigned int time_ = time.tv_sec + time.tv_usec;
+    srand(time_);
     int v1, v2;
     std::tuple<int, int> mass;
     int mass1, mass2, temp;
@@ -239,6 +241,7 @@ int Sudoku::doingSATimes(int count) {
     saInitPat();
 
     for (int i = 0; i < count; i++) {
+        std::cout << i << std::endl;
         memcpy(pat, start_pat, sizeof(int)*81);
         converge_count += refine();
     }
