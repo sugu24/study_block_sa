@@ -53,7 +53,7 @@ void setAppears(int HintCount, std::vector<std::tuple<int, int, int>> *appears, 
         int p = std::get<1>(*iter);
         if (HintCount != 14 && parent[p] >= MAX_PARENT)
             iter = appears->erase(iter);
-        else if (HintCount != 14 && parent[p] >= 20) {
+        else if (HintCount == 14 && parent[p] >= 20) {
             iter = appears->erase(iter);
         } else {
             parent[p]++;
@@ -292,13 +292,14 @@ bool underAnswer() {
 int LOOPCOUNT = 0;
 bool use_ax;
 int main(int argc, char *argv[]) {
-    if (argc > 2) {
+    if (argc == 3) {
         BEAM = std::stoi(argv[1]);
         MAX_PARENT = std::stoi(argv[2]);
-        use_ax = std::stoi(argv[3]) == 1;
         // setNo = std::stoi(argv[2]) / 13 + 17;
         // setHintsNum = std::stoi(argv[2]) % 13 + 1;
         // printf("setNo %d, setHintsNum %d\n", setNo, setHintsNum);
+    } else {
+        exit(printf("argc is not 4\n"));
     }
     if (argc > 1) 
         file_name = "sudoku" + std::to_string(BEAM) + "_" + std::to_string(MAX_PARENT) + "_.txt";
@@ -324,8 +325,7 @@ int main(int argc, char *argv[]) {
     // }
     printf("loop break\n");
 
-    if (use_ax)
-        createSudoku17(BEAM);
+    createSudoku17(BEAM);
     Sudoku sudoku = createSudoku(BEAM);
     END = time(NULL);
     printSudoku();
