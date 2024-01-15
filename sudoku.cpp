@@ -53,7 +53,7 @@ void setAppears(int HintCount, std::vector<std::tuple<int, int, int>> *appears, 
         int p = std::get<1>(*iter);
         if (HintCount != 14 && parent[p] >= MAX_PARENT)
             iter = appears->erase(iter);
-        else if (HintCount == 14 && parent[p] >= 20) {
+        else if (HintCount == 14 && parent[p] >= beam / BEAM + 1) {
             iter = appears->erase(iter);
         } else {
             parent[p]++;
